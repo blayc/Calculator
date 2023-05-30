@@ -3,21 +3,23 @@ let operator;
 let num2;
 const bigDisplay = document.querySelector('.total');
 const smallDisplay = document.querySelector('.history');
+const smallDisplayText = document.querySelector('.smallDisplayText'); 
+const bigDisplayText = document.querySelector('.bigDisplayText')
 
 function updateDisplay (e) {
     if (e.target.dataset.type == 'num' && !operator) {
         !num1 ? num1 = `${e.target.innerText}` :
         num1 += `${e.target.innerText}`; 
-        bigDisplay.textContent = `${num1}`;}
+        bigDisplayText.textContent = `${num1}`;}
 
     else if (e.target.dataset.type == 'operator' && num1 && !num2) {
         operator = `${e.target.innerText}`; 
-        smallDisplay.textContent = `${num1} ${operator}`
+        smallDisplayText.textContent = `${num1} ${operator}`
     }
 
     else if (e.target.dataset.type == 'clear') {
-        bigDisplay.textContent = '';
-        smallDisplay.textContent = '';
+        bigDisplayText.textContent = '';
+        smallDisplayText.textContent = '';
         num1 = null; 
         operator = null;
         num2 = null;
@@ -26,23 +28,34 @@ function updateDisplay (e) {
     else if (e.target.dataset.type == 'num' && num1 && operator){
         !num2 ? num2 = `${e.target.innerText}` :
         num2 += `${e.target.innerText}`; 
-        smallDisplay.textContent = `${num1} ${operator}`;
-        bigDisplay.textContent = `${num2}`
+        smallDisplayText.textContent = `${num1} ${operator}`;
+        bigDisplayText.textContent = `${num2}`
         }
 
-    else if (e.target.dataset.type == 'equals' && num1 && operator && num2 ||
-             e.target.dataset.type == 'operator' && num1 && operator && num2) {
+    else if (e.target.dataset.type == 'equals' && num1 && operator && num2) {
 
         num1 = parseFloat(num1);
         num2 = parseFloat(num2);
-        smallDisplay.textContent = `${num1} ${operator} ${num2}`
+        smallDisplayText.textContent = `${num1} ${operator} ${num2} =`
         let answer = operate(num1, operator, num2); 
-        bigDisplay.textContent = `${answer}`;
+        bigDisplayText.textContent = `${answer}`;
         num1 = `${answer}`; 
-        operator = `${e.target.innerText}`
+    }
+
+    else if (e.target.dataset.type == 'operator' && num1 && operator && num2) {
+        num1 = parseFloat(num1);
+        num2 = parseFloat(num2);
+        let answer = operate(num1, operator, num2); 
+        bigDisplayText.textContent = `${answer}`;
+        num1 = `${answer}`; 
+        operator = `${e.target.innerText}`; 
+        smallDisplayText.textContent = `${num1} ${operator}`
     }
 
     else {return};
+
+    adjustBigFont();
+    adjustSmallFont();
 }
 
 const buttons = document.querySelectorAll('.button');
@@ -101,6 +114,31 @@ function operate (num1, operator, num2) {
 
 };
 
-function backspace () {
+// function backspace () {
 
+// }
+
+function adjustBigFont() {
+    const maxFontSize = 5;
+    bigDisplayText.style.fontSize = maxFontSize + 'rem';
+    
+    let fontSize = maxFontSize;
+
+    while (bigDisplayText.offsetWidth > bigDisplay.offsetWidth) {
+        fontSize -= 0.1;
+        bigDisplayText.style.fontSize = fontSize + 'rem';
+    }
+
+}
+
+function adjustSmallFont() {
+    const maxFontSize = 2;
+    smallDisplayText.style.fontSize = maxFontSize + 'rem';
+    
+    let fontSize = maxFontSize;
+
+    while (smallDisplayText.offsetWidth > smallDisplay.offsetWidth) {
+        fontSize -= 0.1;
+        bigDisplayText.style.fontSize = fontSize + 'rem';
+    }
 }

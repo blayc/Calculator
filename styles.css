@@ -108,11 +108,13 @@ body {
     border: none
 }
 
-.total {
+.bigDisplayText {
     font-size: 5rem;
+    white-space: nowrap;
 }
 
-.history {
+.smallDisplayText {
     font-size: 2rem; 
-    opacity: .75
+    opacity: .75; 
+    white-space: nowrap;
 }
