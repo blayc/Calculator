@@ -6,12 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="calc-body">
-        <div class="display"></div>
-        <div class="buttons"></div>
+        <div class="display">
+            <div class="screen">
+                <div class="history"></div>
+                <div class="total"></div>
+            </div>
+        </div>
+        <div class="buttons">
+            <div data-type="clear" class="button clear">CLEAR</div>
+            <div class="button">
+                <img src="images/backspace.svg" alt="Backspace" class="backspace">
+            </div>
+            <div data-type="num" class="button">7</div>
+            <div data-type="num" class="button">8</div>
+            <div data-type="num" class="button">9</div>
+            <div data-type="operator" class="button">/</div>
+            <div data-type="num" class="button">4</div>
+            <div data-type="num" class="button">5</div>
+            <div data-type="num" class="button">6</div>
+            <div data-type="operator" class="button">x</div>
+            <div data-type="num" class="button">1</div>
+            <div data-type="num" class="button">2</div>
+            <div data-type="num" class="button">3</div>
+            <div data-type="operator" class="button">-</div>
+            <div data-type="num" class="button">.</div>
+            <div data-type="num" class="button">0</div>
+            <div data-type="equals" class="button">=</div>
+            <div data-type="operator" class="button">+</div>
+        </div>
     </div>
 </body>
 </html>
