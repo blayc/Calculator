@@ -52,6 +52,20 @@ function updateDisplay (e) {
         smallDisplayText.textContent = `${num1} ${operator}`
     }
 
+    else if (e.target.dataset.type == 'backspace') {
+
+        if (num1 && !operator) {
+            num1 = backspace(num1);
+            bigDisplayText.textContent = `${num1}`
+        }
+        else if (num2) {
+            num2 = backspace(num2);
+            bigDisplayText.textContent = `${num2}`
+        }
+        else {return}
+    }
+
+
     else {return};
 
     adjustBigFont();
@@ -61,9 +75,17 @@ function updateDisplay (e) {
 const buttons = document.querySelectorAll('.button');
 
 buttons.forEach(button => {
-    button.addEventListener('click', updateDisplay)
+    button.addEventListener('mousedown', updateDisplay); 
 
 }); 
+
+// window.addEventListener('keydown', e => {
+//     updateDisplay(e); 
+// })
+
+function backspace (str) {
+    return str.slice(0, -1)
+}
 
 function newCalc () {
     num2 = null; 
@@ -114,9 +136,6 @@ function operate (num1, operator, num2) {
 
 };
 
-// function backspace () {
-
-// }
 
 function adjustBigFont() {
     const maxFontSize = 5;
