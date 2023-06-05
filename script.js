@@ -6,82 +6,114 @@ const smallDisplay = document.querySelector('.history');
 const smallDisplayText = document.querySelector('.smallDisplayText'); 
 const bigDisplayText = document.querySelector('.bigDisplayText')
 
-function updateDisplay (e) {
-    if (e.target.dataset.type == 'num' && !operator) {
-        !num1 ? num1 = `${e.target.innerText}` :
-        num1 += `${e.target.innerText}`; 
-        bigDisplayText.textContent = `${num1}`;}
-
-    else if (e.target.dataset.type == 'operator' && num1 && !num2) {
-        operator = `${e.target.innerText}`; 
-        smallDisplayText.textContent = `${num1} ${operator}`
-    }
-
-    else if (e.target.dataset.type == 'clear') {
-        bigDisplayText.textContent = '';
-        smallDisplayText.textContent = '';
-        num1 = null; 
-        operator = null;
-        num2 = null;
-    }
-
-    else if (e.target.dataset.type == 'num' && num1 && operator){
-        !num2 ? num2 = `${e.target.innerText}` :
-        num2 += `${e.target.innerText}`; 
-        smallDisplayText.textContent = `${num1} ${operator}`;
-        bigDisplayText.textContent = `${num2}`
-        }
-
-    else if (e.target.dataset.type == 'equals' && num1 && operator && num2) {
-
-        num1 = parseFloat(num1);
-        num2 = parseFloat(num2);
-        smallDisplayText.textContent = `${num1} ${operator} ${num2} =`
-        let answer = operate(num1, operator, num2); 
-        bigDisplayText.textContent = `${answer}`;
-        num1 = `${answer}`; 
-    }
-
-    else if (e.target.dataset.type == 'operator' && num1 && operator && num2) {
-        num1 = parseFloat(num1);
-        num2 = parseFloat(num2);
-        let answer = operate(num1, operator, num2); 
-        bigDisplayText.textContent = `${answer}`;
-        num1 = `${answer}`; 
-        operator = `${e.target.innerText}`; 
-        smallDisplayText.textContent = `${num1} ${operator}`
-    }
-
-    else if (e.target.dataset.type == 'backspace') {
-
-        if (num1 && !operator) {
-            num1 = backspace(num1);
-            bigDisplayText.textContent = `${num1}`
-        }
-        else if (num2) {
-            num2 = backspace(num2);
-            bigDisplayText.textContent = `${num2}`
-        }
-        else {return}
-    }
-
-
-    else {return};
-
-    adjustBigFont();
-    adjustSmallFont();
-}
 
 const buttons = document.querySelectorAll('.button');
 
 buttons.forEach(button => {
-    button.addEventListener('mousedown', updateDisplay); 
+    button.addEventListener('mousedown', e => {
+        handleInput({type: 'mouse', target: e.target})
+    }); 
+});
 
+window.addEventListener('keydown', e => {
+    handleInput({type: 'keyboard', target: e.key});
+    const keyButton = document.querySelector(`.button[data-key="${e.key}"]`); 
+    keyButton.classList.add('pressed')
 }); 
 
-// window.addEventListener('keydown', e => {
-//     updateDisplay(e); 
-// })
+window.addEventListener('keyup', e => {
+    const keyButton = document.querySelector(`.button[data-key="${e.key}"]`); 
+    keyButton.classList.remove('pressed')
+});
+
+
+function handleInput (input) {
+
+    let pushedButton;
+
+    if (input.type === 'mouse') {
+        pushedButton = input.target;
+    }
+    else if (input.type === 'keyboard') {
+        pushedButton = document.querySelector(`.button[data-key="${input.target}"]`)
+    }
+
+    const buttonType = pushedButton.dataset.type;
+    const buttonValue = `${pushedButton.innerText}`; 
+
+    switch(buttonType) {
+        
+        case 'num':
+
+            if(!operator) {
+                !num1 ? num1 = buttonValue :
+                num1 += buttonValue;
+                bigDisplayText.textContent = `${num1}`
+            } 
+            else if (operator) {
+                !num2 ? num2 = buttonValue :
+                num2 += buttonValue; 
+                smallDisplayText.textContent = `${num1} ${operator}`;
+                bigDisplayText.textContent = `${num2}`
+            }
+            break;
+
+        case 'operator':
+
+            if (num1 && !num2) {
+                operator = buttonValue; 
+                smallDisplayText.textContent = `${num1} ${operator}`
+            }
+            else if (num1 && operator && num2) {
+                num1 = parseFloat(num1);
+                num2 = parseFloat(num2);
+                let answer = operate(num1, operator, num2); 
+                bigDisplayText.textContent = `${answer}`;
+                num1 = `${answer}`; 
+                operator = buttonValue; 
+                smallDisplayText.textContent = `${num1} ${operator}`
+            }
+            break;
+
+        case 'equals':
+
+             if (num1 && operator && num2) {
+                num1 = parseFloat(num1);
+                num2 = parseFloat(num2);
+                smallDisplayText.textContent = `${num1} ${operator} ${num2} =`
+                let answer = operate(num1, operator, num2); 
+                bigDisplayText.textContent = `${answer}`;
+                num1 = `${answer}`; 
+             }
+            break;
+
+        case 'clear':
+
+            bigDisplayText.textContent = '';
+            smallDisplayText.textContent = '';
+            num1 = null; 
+            operator = null;
+            num2 = null;
+            break;
+
+        case 'backspace':
+
+            if (num1 && !operator) {
+                num1 = backspace(num1);
+                bigDisplayText.textContent = `${num1}`
+            }
+            else if (num2) {
+                num2 = backspace(num2);
+                bigDisplayText.textContent = `${num2}`
+            }
+            else {return}
+    }
+
+    adjustBigFont();
+    adjustSmallFont();
+
+};
+
 
 function backspace (str) {
     return str.slice(0, -1)
